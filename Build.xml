@@ -17,7 +17,8 @@
   <target name="compile" depends="init"
         description="compile the source">
     <!-- Compile the ESQL code from ${src} into ${build} -->
-    <javac srcdir="${src}" destdir="${build}"/>
+    <!-- <javac srcdir="${src}" destdir="${build}"/> -->
+    <esql srcdir="${src}" destdir="${build}"/>
   </target>
 
   <target name="dist" depends="compile"
@@ -25,8 +26,8 @@
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}/lib"/>
 
-    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/lib/MyProject-${DSTAMP}.jar" basedir="${build}"/>
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.bar file -->
+    <bar barfile="${dist}/lib/MyProject-${DSTAMP}.bar" basedir="${build}"/>
   </target>
 
   <target name="clean"
