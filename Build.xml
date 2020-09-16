@@ -1,39 +1,26 @@
-<project name="MyProject" default="dist" basedir=".">
-  <description>
-    simple example build file
-  </description>
-  <!-- set global properties for this build -->
-  <property name="src" location="src"/>
-  <property name="build" location="build"/>
-  <property name="dist" location="dist"/>
-
-  <target name="init">
-    <!-- Create the time stamp -->
-    <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
+<?xml version="1.0"?>
+<project name="project" default="run">
+  <target name="run" description="">
+    <property name="toolkit.home" value="C:\Program Files (x86)\IBM\IntegrationToolkit90" />
+    <property name="ant.bars.basedir" value="C:\iib-ci-repo" />
+    <property name="bar.name" value="${ant.bars.basedir}\result.bar" />
+    <property name="workspace.dir" value="F:\Code\Broker\worksp" />
+    <antcall target="build" />
   </target>
+  <target name="build">
+     <echo message="Building the Message Broker Project @ ${workspace.dir}" />
+      <echo message="Output ${bar.name}" />
+     <exec executable="${toolkit.home}\mqsicreatebar.exe" spawn="false">
+        <!-- <arg value="-data" />
+            <arg value="${workspace.dir}" /> -->
+        <arg value="-b" />
+            <arg value="${bar.name}" />
+        <!-- List all the message flow projects -->
+        <arg value="-a" />
+            <arg value="MY_APP_NAME" />
 
-  <target name="compile" depends="init"
-        description="compile the source">
-    <!-- Compile the ESQL code from ${src} into ${build} -->
-    <!-- <javac srcdir="${src}" destdir="${build}"/> -->
-    <esql srcdir="${src}" destdir="${build}"/>
-  </target>
-
-  <target name="dist" depends="compile"
-        description="generate the distribution">
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dist}/lib"/>
-
-    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.bar file -->
-    <bar barfile="${dist}/lib/MyProject-${DSTAMP}.bar" basedir="${build}"/>
-  </target>
-
-  <target name="clean"
-        description="clean up">
-    <!-- Delete the ${build} and ${dist} directory trees -->
-    <delete dir="${build}"/>
-    <delete dir="${dist}"/>
+        <arg value="-skipWSErrorCheck" />
+             <arg value="" />          
+     </exec>
   </target>
 </project>
