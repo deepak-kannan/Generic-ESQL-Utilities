@@ -1,0 +1,37 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool:
+  name: DemoPool
+  demands: Cmd
+
+steps:
+- task: BatchScript@1
+  displayName: 'Run script C:\Program Files\IBM\IIB\10.0.0.22\server\bin\mqsiprofile.cmd'
+  inputs:
+    filename: 'C:\Program Files\IBM\IIB\10.0.0.22\server\bin\mqsiprofile.cmd'
+    modifyEnvironment: true
+
+- task: ms-vsts.ibm-integration-bus.ibm-integration-bus-command.IBMIntegrationBusCommand@1
+  displayName: 'Run mqsicreatebar on IBM Integration Bus.'
+  inputs:
+    iibEndpoint: 'IBM Integration Bus Service Connection'
+    cmd: mqsicreatebar
+    args: '-data C:\AzureBuild\DemoPoolAgent\_work\1\s -b msg2EMail.bar -o C:\AzureBuild\DemoPoolAgent\_work\1\s\msg2EMail.msgflow'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    targetPath: 'C:\AzureBuild\DemoPoolAgent\_work\1\s\msg2EMail.bar'
+
+- task: ms-vsts.ibm-integration-bus.ibm-integration-bus-deploy.IBMIntegrationBusDeploy@1
+  displayName: 'Deploy **/*.bar to IBM Integration Bus.'
+  inputs:
+    iibEndpoint: 'IBM Integration Bus Service Connection'
+    integrationServerName: MyIntegrationServer001
+
